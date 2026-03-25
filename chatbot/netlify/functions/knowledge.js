@@ -65,5 +65,4 @@ Sens odpowiedzi: Księgowa pilnuje żeby faktura zgadzała się z umową. Ale cz
 Jeśli klient pyta o coś z powyższej listy, grzecznie wyjaśnij że nie możesz w tym pomóc i zasugeruj kontakt mailowy lub przez LinkedIn.
 
 ===== KONIEC KNOWLEDGE BASE =====
-```
 `;
