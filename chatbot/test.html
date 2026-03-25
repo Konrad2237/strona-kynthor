@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KYNTHOR Chatbot — Test</title>
+  <link rel="stylesheet" href="./widget.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #f9fafb;
+      color: #1f2937;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+    }
+
+    .test-card {
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      max-width: 560px;
+      width: 100%;
+      padding: 36px 32px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    }
+
+    .test-card h1 {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .test-card .subtitle {
+      font-size: 14px;
+      color: #6b7280;
+      margin-bottom: 28px;
+    }
+
+    .test-card h2 {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: #374151;
+    }
+
+    .checklist {
+      list-style: none;
+      margin-bottom: 28px;
+    }
+
+    .checklist li {
+      position: relative;
+      padding: 8px 0 8px 28px;
+      font-size: 14px;
+      line-height: 1.5;
+      color: #374151;
+    }
+
+    .checklist li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 12px;
+      width: 16px;
+      height: 16px;
+      border: 2px solid #d1d5db;
+      border-radius: 4px;
+    }
+
+    .checklist li code {
+      background: #f3f4f6;
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-size: 13px;
+      color: #1a56db;
+    }
+
+    .tip-box {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-radius: 8px;
+      padding: 14px 16px;
+      font-size: 13px;
+      line-height: 1.6;
+      color: #1e40af;
+    }
+
+    .tip-box strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .tip-box kbd {
+      background: #ffffff;
+      border: 1px solid #93c5fd;
+      border-radius: 4px;
+      padding: 1px 6px;
+      font-family: inherit;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="test-card">
+    <h1>KYNTHOR Chatbot — strona testowa</h1>
+    <p class="subtitle">Widget powinien pojawić się w prawym dolnym rogu.</p>
+
+    <h2>Przed testem sprawdź:</h2>
+    <ul class="checklist">
+      <li>Klucz <code>ANTHROPIC_API_KEY</code> ustawiony w Netlify: Site settings &gt; Environment variables</li>
+      <li>Plik <code>knowledge.txt</code> obecny w folderze <code>chatbot/</code></li>
+      <li>Zainstalowane zależności: <code>npm install</code> w folderze <code>chatbot/</code></li>
+      <li>Deploy na Netlify wykonany (lub <code>netlify dev</code> uruchomiony lokalnie)</li>
+    </ul>
+
+    <div class="tip-box">
+      <strong>Widget się nie pojawia?</strong>
+      Otwórz konsolę przeglądarki klawiszem <kbd>F12</kbd> (lub <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>I</kbd> / <kbd>Cmd</kbd>+<kbd>Option</kbd>+<kbd>I</kbd> na Mac), przejdź do zakładki Console i sprawdź czy nie ma błędów ładowania plików widget.css lub widget.js.
+    </div>
+  </div>
+
+  <script src="./widget.js" defer></script>
+</body>
+</html>
