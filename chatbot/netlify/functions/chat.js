@@ -222,7 +222,7 @@ exports.handler = async (event) => {
   // Załaduj knowledge base
   let systemPrompt;
   try {
-    const knowledge = loadKnowledge();
+    const knowledge = require('./knowledge');
     const botName = process.env.BOT_NAME || "Darnok";
 
     systemPrompt = `Jesteś ${botName} — asystentem AI marki KYNTHOR.
