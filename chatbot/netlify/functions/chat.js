@@ -102,11 +102,12 @@ function containsProfanity(text) {
 // ---------------------------------------------------------------------------
 function loadKnowledge() {
   const possiblePaths = [
+    path.resolve(__dirname, "knowledge.txt"),
     path.resolve(__dirname, "../../knowledge.txt"),
     path.resolve(__dirname, "../knowledge.txt"),
     path.resolve(process.cwd(), "knowledge.txt"),
     path.resolve("/var/task/knowledge.txt"),
-  ];
+];
 
   for (const p of possiblePaths) {
     try {
