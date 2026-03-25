@@ -1,51 +1,54 @@
 /* ============================================================
    KYNTHOR CHATBOT WIDGET — STYLES
+   Dopasowane do kolorystyki strony kynthor.pl
    ============================================================ */
 
 /* ---------- CSS Variables ---------- */
 :root {
-  --kynthor-primary: #1a56db;
-  --kynthor-primary-hover: #1443b0;
-  --kynthor-primary-light: #e8eefb;
-  --kynthor-bg: #ffffff;
-  --kynthor-bg-secondary: #f3f4f6;
-  --kynthor-text: #1f2937;
-  --kynthor-text-light: #6b7280;
-  --kynthor-border: #e5e7eb;
-  --kynthor-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  --kynthor-primary: #0d2f6e;
+  --kynthor-primary-hover: #0a2458;
+  --kynthor-primary-light: #132040;
+  --kynthor-gold: #d4af37;
+  --kynthor-gold-dark: #b8952e;
+  --kynthor-bg: #0e1324;
+  --kynthor-bg-secondary: #161d30;
+  --kynthor-text: #e8e8e8;
+  --kynthor-text-light: #a8a8a8;
+  --kynthor-border: rgba(212, 175, 55, 0.15);
+  --kynthor-border-strong: rgba(212, 175, 55, 0.3);
+  --kynthor-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
   --kynthor-radius: 14px;
-  --kynthor-font: "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
+  --kynthor-font: 'Inter', "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 /* ---------- Toggle Button ---------- */
 #kynthor-chat-toggle {
   position: fixed;
-  bottom: 24px;
+  bottom: 96px;
   right: 24px;
-  width: 60px;
-  height: 60px;
+  width: 56px;
+  height: 56px;
   border-radius: 50%;
-  background: var(--kynthor-primary);
+  background: linear-gradient(135deg, #d4af37 0%, #f4d03f 100%);
   border: none;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 16px rgba(26, 86, 219, 0.4);
+  box-shadow: 0 4px 16px rgba(212, 175, 55, 0.35);
   z-index: 99998;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 #kynthor-chat-toggle:hover {
   transform: scale(1.08);
-  box-shadow: 0 6px 24px rgba(26, 86, 219, 0.5);
-  background: var(--kynthor-primary-hover);
+  box-shadow: 0 6px 24px rgba(212, 175, 55, 0.5);
 }
 
 #kynthor-chat-toggle svg {
-  width: 28px;
-  height: 28px;
-  fill: #ffffff;
+  width: 26px;
+  height: 26px;
+  fill: #0a0e1a;
   transition: transform 0.25s ease;
 }
 
@@ -56,7 +59,7 @@
 /* ---------- Chat Window ---------- */
 #kynthor-chat-window {
   position: fixed;
-  bottom: 100px;
+  bottom: 164px;
   right: 24px;
   width: 380px;
   height: 520px;
@@ -67,7 +70,7 @@
   flex-direction: column;
   z-index: 99999;
   overflow: hidden;
-  border: 1px solid var(--kynthor-border);
+  border: 1px solid var(--kynthor-border-strong);
   opacity: 0;
   transform: translateY(20px) scale(0.95);
   pointer-events: none;
@@ -84,39 +87,51 @@
 #kynthor-chat-header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 16px 18px;
-  background: var(--kynthor-primary);
-  color: #ffffff;
+  justify-content: center;
+  position: relative;
+  padding: 18px 18px;
+  background: var(--kynthor-bg);
+  border-bottom: 1px solid var(--kynthor-border-strong);
   flex-shrink: 0;
 }
 
 #kynthor-chat-header-info {
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 2px;
 }
 
 #kynthor-chat-header-name {
   font-family: var(--kynthor-font);
-  font-size: 16px;
+  font-size: 20px;
   font-weight: 700;
-  letter-spacing: 0.01em;
+  letter-spacing: 0.02em;
+  background: linear-gradient(135deg, #d4af37 0%, #f4d03f 50%, #d4af37 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 #kynthor-chat-header-status {
   font-family: var(--kynthor-font);
-  font-size: 12px;
-  opacity: 0.8;
+  font-size: 11px;
+  color: var(--kynthor-text-light);
   font-weight: 400;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
 }
 
 #kynthor-chat-close {
-  background: rgba(255, 255, 255, 0.15);
-  border: none;
-  color: #ffffff;
-  width: 32px;
-  height: 32px;
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--kynthor-text-light);
+  width: 30px;
+  height: 30px;
   border-radius: 8px;
   cursor: pointer;
   display: flex;
@@ -124,12 +139,13 @@
   justify-content: center;
   font-size: 18px;
   font-family: var(--kynthor-font);
-  transition: background 0.15s ease;
+  transition: background 0.15s ease, color 0.15s ease;
   flex-shrink: 0;
 }
 
 #kynthor-chat-close:hover {
-  background: rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--kynthor-text);
 }
 
 /* ---------- Messages ---------- */
@@ -152,7 +168,7 @@
 }
 
 #kynthor-chat-messages::-webkit-scrollbar-thumb {
-  background: var(--kynthor-border);
+  background: rgba(212, 175, 55, 0.2);
   border-radius: 10px;
 }
 
@@ -162,7 +178,7 @@
   border-radius: 12px;
   font-family: var(--kynthor-font);
   font-size: 14px;
-  line-height: 1.5;
+  line-height: 1.55;
   word-wrap: break-word;
   animation: kynthor-msg-in 0.2s ease;
 }
@@ -181,7 +197,8 @@
 .kynthor-msg-user {
   align-self: flex-end;
   background: var(--kynthor-primary);
-  color: #ffffff;
+  color: #e8e8e8;
+  border: 1px solid rgba(255, 255, 255, 0.06);
   border-bottom-right-radius: 4px;
 }
 
@@ -189,6 +206,7 @@
   align-self: flex-start;
   background: var(--kynthor-bg-secondary);
   color: var(--kynthor-text);
+  border: 1px solid var(--kynthor-border);
   border-bottom-left-radius: 4px;
 }
 
@@ -200,6 +218,7 @@
   padding: 12px 16px;
   align-self: flex-start;
   background: var(--kynthor-bg-secondary);
+  border: 1px solid var(--kynthor-border);
   border-radius: 12px;
   border-bottom-left-radius: 4px;
 }
@@ -208,7 +227,7 @@
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: var(--kynthor-text-light);
+  background: var(--kynthor-gold);
   animation: kynthor-bounce 1.4s infinite ease-in-out both;
 }
 
@@ -241,7 +260,7 @@
   align-items: center;
   gap: 8px;
   padding: 12px 14px;
-  border-top: 1px solid var(--kynthor-border);
+  border-top: 1px solid var(--kynthor-border-strong);
   background: var(--kynthor-bg);
   flex-shrink: 0;
 }
@@ -249,12 +268,12 @@
 #kynthor-chat-input {
   flex: 1;
   padding: 10px 14px;
-  border: 1px solid var(--kynthor-border);
+  border: 1px solid var(--kynthor-border-strong);
   border-radius: 10px;
   font-family: var(--kynthor-font);
   font-size: 14px;
   color: var(--kynthor-text);
-  background: var(--kynthor-bg);
+  background: var(--kynthor-bg-secondary);
   outline: none;
   transition: border-color 0.15s ease;
   resize: none;
@@ -265,25 +284,25 @@
 }
 
 #kynthor-chat-input:focus {
-  border-color: var(--kynthor-primary);
+  border-color: var(--kynthor-gold-dark);
 }
 
 #kynthor-chat-send {
   width: 40px;
   height: 40px;
   border-radius: 10px;
-  background: var(--kynthor-primary);
+  background: linear-gradient(135deg, #d4af37 0%, #f4d03f 100%);
   border: none;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  transition: background 0.15s ease, transform 0.1s ease;
+  transition: box-shadow 0.15s ease, transform 0.1s ease;
 }
 
 #kynthor-chat-send:hover {
-  background: var(--kynthor-primary-hover);
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.4);
 }
 
 #kynthor-chat-send:active {
@@ -291,14 +310,14 @@
 }
 
 #kynthor-chat-send:disabled {
-  opacity: 0.5;
+  opacity: 0.4;
   cursor: not-allowed;
 }
 
 #kynthor-chat-send svg {
   width: 18px;
   height: 18px;
-  fill: #ffffff;
+  fill: #0a0e1a;
 }
 
 /* ---------- Welcome message ---------- */
@@ -311,8 +330,23 @@
   line-height: 1.5;
 }
 
-/* ---------- Mobile: full-screen ---------- */
-@media (max-width: 480px) {
+/* ---------- Mobile ≤767px ---------- */
+@media (max-width: 767px) {
+  /* Przycisk chatbota: prawy dolny róg, obok sticky CTA */
+  #kynthor-chat-toggle {
+    bottom: 6px;
+    right: 8px;
+    width: 48px;
+    height: 48px;
+    z-index: 1001;
+  }
+
+  #kynthor-chat-toggle svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  /* Okno czatu: pełny ekran na mobile */
   #kynthor-chat-window {
     top: 0;
     left: 0;
@@ -326,5 +360,20 @@
 
   #kynthor-chat-toggle.kynthor-open {
     display: none;
+  }
+}
+
+/* ---------- Mobile ≤480px ---------- */
+@media (max-width: 480px) {
+  #kynthor-chat-toggle {
+    bottom: 4px;
+    right: 6px;
+    width: 44px;
+    height: 44px;
+  }
+
+  #kynthor-chat-toggle svg {
+    width: 20px;
+    height: 20px;
   }
 }

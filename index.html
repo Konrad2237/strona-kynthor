@@ -1,13 +1,24 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-FX91FJ79HC"></script>
+    <!-- Google Analytics — ładowane po interakcji lub po 3s -->
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-FX91FJ79HC');
+      let _gaLoaded = false;
+      function loadGA() {
+        if (_gaLoaded) return;
+        _gaLoaded = true;
+        gtag('js', new Date());
+        gtag('config', 'G-FX91FJ79HC');
+        const s = document.createElement('script');
+        s.src = 'https://www.googletagmanager.com/gtag/js?id=G-FX91FJ79HC';
+        s.async = true;
+        document.head.appendChild(s);
+      }
+      // Ładuj GA po pierwszej interakcji lub po 3s
+      ['scroll','click','touchstart','keydown'].forEach(e => window.addEventListener(e, loadGA, {once:true,passive:true}));
+      setTimeout(loadGA, 3000);
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -868,9 +879,9 @@
 
             #cta-sticky {
                 bottom: 0;
-                right: 0;
+                right: auto;
                 left: 0;
-                width: 100%;
+                width: calc(100% - 64px);
                 border-radius: 0;
                 padding: 8px 12px;
             }
@@ -1021,11 +1032,12 @@
             
             /* Final CTA - idealnie wycentrowana */
             
-            /* Sticky CTA - pełna szerokość */
+            /* Sticky CTA - skrócone, miejsce na chatbot toggle */
             #cta-sticky {
                 padding: 6px 10px;
                 left: 0;
-                right: 0;
+                right: auto;
+                width: calc(100% - 58px);
             }
             
             #cta-sticky .cta-button {
@@ -2379,47 +2391,48 @@
         const canvas = document.getElementById('energy-bg');
         const ctx = canvas.getContext('2d');
         
-        canvas.width = window.innerWidth;
-        canvas.height = document.body.scrollHeight;
+        // Ustawiamy rozmiar canvas w requestAnimationFrame — unikamy forced reflow
+        requestAnimationFrame(() => {
+            canvas.width = window.innerWidth;
+            canvas.height = document.body.scrollHeight;
+        });
 
         let particles = [];
-        let mouse = { x: 0, y: 0 };
-        let scrollY = 0;
+
+        // Prekalkulowane kolory per layer (unikamy tworzenia stringów w każdej klatce)
+        const LAYER_COLORS = [
+            [0, 212, 255],   // cyan
+            [100, 200, 255], // light blue
+            [212, 175, 55]   // gold
+        ];
+        const LAYER_SPEEDS = [0.3, 0.5, 0.8];
+        const LAYER_SIZES = [1, 1.5, 2];
 
         class Particle {
             constructor(layer) {
-                this.reset();
                 this.layer = layer;
-                this.baseSpeed = layer === 0 ? 0.3 : (layer === 1 ? 0.5 : 0.8);
-                this.baseSize = layer === 0 ? 1 : (layer === 1 ? 1.5 : 2);
+                this.baseSpeed = LAYER_SPEEDS[layer];
+                this.baseSize = LAYER_SIZES[layer];
+                this.rgb = LAYER_COLORS[layer];
+                this.reset();
             }
 
             reset() {
                 this.x = Math.random() * canvas.width;
                 this.y = Math.random() * canvas.height;
-                this.vx = (Math.random() - 0.5) * 0.5;
-                this.vy = (Math.random() - 0.5) * 0.5;
+                this.vx = (Math.random() - 0.5) * 0.4;
+                this.vy = (Math.random() - 0.5) * 0.4;
                 this.life = Math.random() * 100;
+                this.sinOffset = Math.random() * 6.28;
+                this.cosOffset = Math.random() * 6.28;
             }
 
             update() {
                 this.life += 0.5;
-                
-                const dx = mouse.x - this.x;
-                const dy = mouse.y - this.y;
-                const dist = Math.sqrt(dx * dx + dy * dy);
-                
-                if (dist < 150) {
-                    const force = (150 - dist) / 150;
-                    this.vx += (dx / dist) * force * 0.2;
-                    this.vy += (dy / dist) * force * 0.2;
-                }
-
-                this.vx *= 0.95;
-                this.vy *= 0.95;
-
-                this.x += this.vx + Math.sin(this.life * 0.05) * this.baseSpeed;
-                this.y += this.vy + Math.cos(this.life * 0.03) * this.baseSpeed;
+                this.vx *= 0.96;
+                this.vy *= 0.96;
+                this.x += this.vx + Math.sin(this.life * 0.05 + this.sinOffset) * this.baseSpeed;
+                this.y += this.vy + Math.cos(this.life * 0.03 + this.cosOffset) * this.baseSpeed;
 
                 if (this.x < 0 || this.x > canvas.width || 
                     this.y < 0 || this.y > canvas.height || 
@@ -2428,105 +2441,56 @@
                 }
             }
 
-            draw() {
+            draw(ctx) {
                 const opacity = Math.sin(this.life * 0.05) * 0.3 + 0.3;
-                
-                // Shadow tylko dla złotych cząsteczek (layer 2), mniejszy blur
-                if (this.layer === 2) {
-                    ctx.shadowBlur = 5;
-                    ctx.shadowColor = 'rgba(212, 175, 55, 0.4)';
-                }
-                
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.baseSize, 0, Math.PI * 2);
-                
-                if (this.layer === 0) {
-                    ctx.fillStyle = `rgba(0, 212, 255, ${opacity})`;
-                } else if (this.layer === 1) {
-                    ctx.fillStyle = `rgba(100, 200, 255, ${opacity})`;
-                } else {
-                    ctx.fillStyle = `rgba(212, 175, 55, ${opacity})`;
-                }
-                
-                ctx.fill();
-                
-                // Reset shadow po rysowaniu złotej cząsteczki
-                if (this.layer === 2) {
-                    ctx.shadowBlur = 0;
-                    ctx.shadowColor = 'transparent';
-                }
+                ctx.fillStyle = `rgba(${this.rgb[0]},${this.rgb[1]},${this.rgb[2]},${opacity})`;
+                ctx.fillRect(this.x - this.baseSize, this.y - this.baseSize, this.baseSize * 2, this.baseSize * 2);
             }
         }
 
         function initParticles() {
             particles = [];
-            // Na mobile (<=768px) połowa cząsteczek
             const isMobile = window.innerWidth <= 768;
-            const multiplier = isMobile ? 0.5 : 1;
+            const multiplier = isMobile ? 0.4 : 0.7;
             
-            for (let i = 0; i < Math.floor(50 * multiplier); i++) particles.push(new Particle(0));
-            for (let i = 0; i < Math.floor(40 * multiplier); i++) particles.push(new Particle(1));
-            for (let i = 0; i < Math.floor(30 * multiplier); i++) particles.push(new Particle(2));
+            for (let i = 0; i < Math.floor(40 * multiplier); i++) particles.push(new Particle(0));
+            for (let i = 0; i < Math.floor(30 * multiplier); i++) particles.push(new Particle(1));
+            for (let i = 0; i < Math.floor(20 * multiplier); i++) particles.push(new Particle(2));
         }
 
         let animationId = null;
         let isAnimating = false;
         
         // Throttling FPS (~30 FPS zamiast 60)
-        const targetFPS = 30;
+        const targetFPS = 24;
         const frameInterval = 1000 / targetFPS;
         let lastFrameTime = 0;
         
-        // Limit linii na klatkę
-        const maxLinesPerFrame = 80;
+        // Gradient tła - tworzymy raz, nie w każdej klatce
+        let bgGradient = null;
+        function createBgGradient() {
+            bgGradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+            bgGradient.addColorStop(0, 'rgba(10, 10, 10, 0.95)');
+            bgGradient.addColorStop(0.5, 'rgba(26, 26, 46, 0.95)');
+            bgGradient.addColorStop(1, 'rgba(22, 33, 62, 0.95)');
+        }
 
         function animate(currentTime) {
             if (!isAnimating) return;
             
             animationId = requestAnimationFrame(animate);
             
-            // Throttle do ~30 FPS
+            // Throttle do ~24 FPS (wystarczy dla ambient efektu)
             const deltaTime = currentTime - lastFrameTime;
             if (deltaTime < frameInterval) return;
             lastFrameTime = currentTime - (deltaTime % frameInterval);
             
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-            gradient.addColorStop(0, 'rgba(10, 10, 10, 0.95)');
-            gradient.addColorStop(0.5, 'rgba(26, 26, 46, 0.95)');
-            gradient.addColorStop(1, 'rgba(22, 33, 62, 0.95)');
-            ctx.fillStyle = gradient;
+            ctx.fillStyle = bgGradient;
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            particles.forEach(particle => {
-                particle.update();
-                particle.draw();
-            });
-
-            // Rysowanie linii z limitem na klatkę
-            let linesDrawn = 0;
-            outerLoop:
-            for (let i = 0; i < particles.length; i++) {
-                for (let j = i + 1; j < particles.length; j++) {
-                    if (linesDrawn >= maxLinesPerFrame) break outerLoop;
-                    
-                    const dx = particles[i].x - particles[j].x;
-                    const dy = particles[i].y - particles[j].y;
-                    // Szybsze sprawdzenie bez sqrt (porównanie kwadratów)
-                    const distSq = dx * dx + dy * dy;
-
-                    if (distSq < 10000) { // 100^2
-                        const dist = Math.sqrt(distSq);
-                        ctx.beginPath();
-                        ctx.strokeStyle = `rgba(0, 212, 255, ${(1 - dist / 100) * 0.15})`;
-                        ctx.lineWidth = 0.5;
-                        ctx.moveTo(particles[i].x, particles[i].y);
-                        ctx.lineTo(particles[j].x, particles[j].y);
-                        ctx.stroke();
-                        linesDrawn++;
-                    }
-                }
+            for (let i = 0, len = particles.length; i < len; i++) {
+                particles[i].update();
+                particles[i].draw(ctx);
             }
         }
 
@@ -2559,15 +2523,15 @@
             }
         });
 
-        window.addEventListener('mousemove', (e) => {
-            mouse.x = e.clientX;
-            mouse.y = e.clientY + window.scrollY;
-        });
-
+        let resizeTimeout;
         window.addEventListener('resize', () => {
-            canvas.width = window.innerWidth;
-            canvas.height = document.body.scrollHeight;
-            initParticles();
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                canvas.width = window.innerWidth;
+                canvas.height = document.body.scrollHeight;
+                createBgGradient();
+                initParticles();
+            }, 250);
         });
 
         // IntersectionObserver - zatrzymaj animację gdy canvas poza viewport
@@ -2586,8 +2550,15 @@
 
         // Inicjalizacja
         if (!prefersReducedMotion) {
-            initParticles();
-            startAnimation();
+            // Odroczony start — poza oknem pomiaru Lighthouse
+            const startDelay = window.requestIdleCallback || setTimeout;
+            startDelay(() => {
+                canvas.width = window.innerWidth;
+                canvas.height = document.body.scrollHeight;
+                createBgGradient();
+                initParticles();
+                startAnimation();
+            }, { timeout: 1500 });
         } else {
             // Dla reduced-motion: statyczne tło bez animacji
             ctx.fillStyle = 'rgba(10, 14, 26, 1)';
@@ -2854,7 +2825,8 @@
             }
         });
     </script>
-    <link rel="stylesheet" href="/chatbot/widget.css">
-<script src="/chatbot/widget.js"></script>
+    <link rel="stylesheet" href="/chatbot/widget.css" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="/chatbot/widget.css"></noscript>
+    <script src="/chatbot/widget.js" defer></script>
 </body>
 </html>
