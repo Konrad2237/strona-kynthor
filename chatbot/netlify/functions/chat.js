@@ -108,7 +108,8 @@ function loadKnowledge() {
     path.resolve(process.cwd(), "knowledge.txt"),
     path.resolve("/var/task/knowledge.txt"),
 ];
-
+console.log('__dirname:', __dirname);
+console.log('cwd:', process.cwd());
   for (const p of possiblePaths) {
     try {
       return fs.readFileSync(p, "utf-8");
